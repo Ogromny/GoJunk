@@ -5,12 +5,6 @@ import (
 	"math/rand"
 )
 
-const (
-	VariablesLength int = 5
-	MaxIntValue     int = 1000
-	MaxStringLength int = 30
-)
-
 var (
 	variableTypes = [...]string{"int", "string", "bool"}
 )
@@ -21,31 +15,37 @@ type Variable struct {
 	Type  string
 }
 
-func NewVariable(v, n, t string) *Variable {
-	return &Variable{
-		Value: v,
-		Name:  n,
-		Type:  t,
-	}
-}
-
 func NewVariableRandom() *Variable {
 	switch variableTypes[rand.Intn(len(variableTypes))] {
 	case "int":
-		return NewVariable(generateInt(MaxIntValue), generateString(10), "int")
+		return &Variable{
+			Value: fmt.Sprintf("%d", randomInt(0, MaximumIntValue)),
+			Name:  randomString(MaximumLengthOfVariableName),
+			Type:  "int",
+		}
 	case "string":
-		return NewVariable(generateString(MaxStringLength), generateString(10), "string")
-	//bool
+		return &Variable{
+			Value: randomString(MaximumStringLength),
+			Name:  randomString(MaximumLengthOfVariableName),
+			Type:  "string",
+		}
 	default:
-		return NewVariable(generateBool(), generateString(10), "bool")
+		return &Variable{
+			Value: randomBool(),
+			Name:  randomString(MaximumLengthOfVariableName),
+			Type:  "bool",
+		}
 	}
 }
 
-// TODO
 func (v *Variable) String() string {
+	format := "var %s %s = "
+
 	if v.Type == "string" {
-		return fmt.Sprintf("var %s %s = \"%s\"", v.Name, v.Type, v.Value)
+		format += "\"%s\""
+	} else {
+		format += "%s"
 	}
 
-	return fmt.Sprintf("var %s %s = %s", v.Name, v.Type, v.Value)
+	return fmt.Sprintf(format, v.Name, v.Type, v.Value)
 }

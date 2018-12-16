@@ -79,8 +79,8 @@ func Inject(junkCodes []*Variable) {
 					_, err := buffer.WriteString(fmt.Sprintf(
 						"\n%s\nif %s == %s {\n%s = %s\n}\n",
 						junkCode.String(),
-						junkCode.Name, generateRandomBoolOperation(),
-						junkCode.Name, generateRandomBoolOperation(),
+						junkCode.Name, randomBool(),
+						junkCode.Name, randomBool(),
 					))
 					if err != nil {
 						panic(err)

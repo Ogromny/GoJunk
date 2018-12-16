@@ -5,57 +5,41 @@ import (
 	"math/rand"
 )
 
-func generateVariables() []*Variable {
-	variables := make([]*Variable, VariablesLength)
-
-	for i := 0; i < len(variables); i++ {
-		variables[i] = NewVariableRandom()
-	}
-
-	return variables
-}
-
-func generateString(max int) string {
+func randomString(max int) string {
 	random := make([]byte, max)
 
 	if _, err := rand.Read(random); err != nil {
 		panic(random)
 	}
 
-	return fmt.Sprintf("R%X", random)
+	return fmt.Sprintf("R%X", random[:len(random)-1])
 }
 
-// TODO: Better things
-func generateInt(max int) string {
-	return fmt.Sprintf("%d", rand.Intn(max))
+func randomInt(min, max int) int {
+	return min + rand.Intn(max-min)
 }
 
-func generateBool() string {
-	if rand.Int()%2 == 0 {
-		return "true"
-	}
-
-	return "false"
-}
-
-// TODO: rewrite, it's ugly af
-func generateRandomBoolOperation() string {
-	boolOperands := [...]string{"<", ">", "=="}
+func randomBool() string {
+	boolOperator := [...]string{"<", ">", "=="}
 	boolSeparator := [...]string{"||", "&&"}
 
-	junkBool := "("
+	var junk string
 
-	for i := 0; i < 5; i++ {
-		randomInt := rand.Intn(len(boolOperands))
+	for i := 0; i < BoolComplexity; i++ {
+		random := randomInt(0, MaximumIntValue)
+
+		junk += fmt.Sprintf("%d ", random)
 
 		if i%2 == 0 {
-			junkBool += fmt.Sprintf("%d %s ", randomInt, boolOperands[randomInt])
+			junk += fmt.Sprintf("%s ", boolOperator[random%len(boolOperator)])
 		} else {
-			junkBool += fmt.Sprintf("%d %s ", randomInt, boolSeparator[randomInt%len(boolSeparator)])
+			junk += fmt.Sprintf("%s ", boolSeparator[random%len(boolSeparator)])
+		}
+
+		if i == BoolComplexity-1 {
+			junk += fmt.Sprintf("%d", randomInt(0, MaximumIntValue))
 		}
 	}
 
-	junkBool += "1)"
-
-	return junkBool
+	return fmt.Sprintf("(%s)", junk)
 }
