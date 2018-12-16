@@ -50,15 +50,43 @@ func Inject(junkCodes []*Variable) {
 				}
 				junkCode := junkCodes[IndexJunkCode]
 
-				_, err := buffer.WriteString(fmt.Sprintf(
-					"\n%s\nif %s == %d {\n%s = %d\n}\n",
-					junkCode.String(),
-					junkCode.Name, junkCode.Value+10,
-					junkCode.Name, junkCode.Value+10,
-				))
-				if err != nil {
-					panic(err)
+				if junkCode.Type == "int" {
+					_, err := buffer.WriteString(fmt.Sprintf(
+						"\n%s\nif %s == %s {\n%s = %s\n}\n",
+						junkCode.String(),
+						junkCode.Name, junkCode.Value + "+10",
+						junkCode.Name, junkCode.Value + "+10",
+					))
+					if err != nil {
+						panic(err)
+					}
 				}
+
+				if junkCode.Type == "string" {
+					// TODO: maybe a list of strings method randomized here
+					_, err := buffer.WriteString(fmt.Sprintf(
+						"\n%s\nif %s == \"%s\" {\n%s = \"%s\" + \"K\"\n}\n",
+						junkCode.String(),
+						junkCode.Name, junkCode.Value,
+						junkCode.Name, junkCode.Value,
+					))
+					if err != nil {
+						panic(err)
+					}
+				}
+
+				if junkCode.Type == "bool" {
+					_, err := buffer.WriteString(fmt.Sprintf(
+						"\n%s\nif %s == %s {\n%s = %s\n}\n",
+						junkCode.String(),
+						junkCode.Name, "true && 0 == 0 | 1 << 2 && 3 < 3 << 0 >> 1",
+						junkCode.Name, "true && 0 == 0 | 1 << 2 && 3 < 3 << 0 >> 1",
+					))
+					if err != nil {
+						panic(err)
+					}
+				}
+
 
 				IndexJunkCode++
 			}
