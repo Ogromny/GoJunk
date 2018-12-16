@@ -37,3 +37,25 @@ func generateBool() string {
 
 	return "false"
 }
+
+// TODO: rewrite, it's ugly af
+func generateRandomBoolOperation() string {
+	boolOperands := [...]string{"<", ">", "=="}
+	boolSeparator := [...]string{"||", "&&"}
+
+	junkBool := "("
+
+	for i := 0; i < 5; i++ {
+		randomInt := rand.Intn(len(boolOperands))
+
+		if i%2 == 0 {
+			junkBool += fmt.Sprintf("%d %s ", randomInt, boolOperands[randomInt])
+		} else {
+			junkBool += fmt.Sprintf("%d %s ", randomInt, boolSeparator[randomInt%len(boolSeparator)])
+		}
+	}
+
+	junkBool += "1)"
+
+	return junkBool
+}
